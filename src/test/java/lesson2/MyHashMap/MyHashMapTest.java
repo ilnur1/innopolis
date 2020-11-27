@@ -59,6 +59,8 @@ class MyHashMapTest {
         assertEquals(null,myTest.get("11"));
         myTest.put("11","val");
         assertEquals("val",myTest.get("11"));
+        myTest.put("11","val2");
+        assertEquals("val2",myTest.get("11"));
     }
 
     @Test

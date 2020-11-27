@@ -43,18 +43,15 @@ public class MyHashMap<K, V> implements Map {
      * @return
      */
     public boolean containsKey(Object key) {
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i].getKey().equals(key))
-                return true;
-            else if(nodes[i].getNext() != null){
-                Node findNode = findNodeKey(nodes[i],key);
-                if(findNode == null)
-                    continue;
-                else
-                    return true;
-            }
-        }
-        return false;
+        int hashCode = getNewHash(key.hashCode());
+        int index = getIndex(hashCode);
+        if(nodes[index] == null)
+            return false;
+        Node result = findNodeKey(nodes[index], key);
+        if (result != null)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -83,14 +80,15 @@ public class MyHashMap<K, V> implements Map {
      * @return
      */
     public V get(Object key) {
-
-        for (int i = 0; i < nodes.length; i++) {
-            if(nodes[i] == null) continue;
-            Node result = findNodeKey(nodes[i], key);
-            if (result != null)
-                return (V) result.getValue();
-        }
-        return null;
+        int hashCode = getNewHash(key.hashCode());
+        int index = getIndex(hashCode);
+        if(nodes[index] == null)
+            return null;
+        Node result = findNodeKey(nodes[index], key);
+        if (result != null)
+            return (V) result.getValue();
+        else
+            return null;
     }
 
     /**
@@ -160,18 +158,17 @@ public class MyHashMap<K, V> implements Map {
      */
     private Object addNode(Object key, Object value) {
         int hashCode = getNewHash(key.hashCode());
-        int index = hashCode & (size - 1);
+        int index = getIndex(hashCode);
         Node node = nodes[index];
         Node newNode = new Node(key, value,hashCode);
         if(node == null)
         {
             nodes[index] = newNode;
             return newNode;
-        }/*else if (node.getHashCode() == hashCode && node.getKey() == key) {
-            newNode.setNext(node);
-            nodes[index] = newNode;
-            return newNode;
-        }*/ else {
+        }else if (node.getKey().equals(key)) {
+            node.setValue(value);
+            return node;
+        } else {
             newNode.setNext(node);
             nodes[index] = newNode;
             return newNode;
@@ -256,6 +253,16 @@ public class MyHashMap<K, V> implements Map {
     public int getNewHash(int hashCode) {
         hashCode ^= (hashCode >>> 20) ^ (hashCode >>> 12);
         return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
+    }
+
+    /**
+     * Возвращает индекс по хэшу
+     * @param hashCode
+     * @return
+     */
+    public int getIndex(int hashCode)
+    {
+        return  hashCode & (size - 1);
     }
 
 
