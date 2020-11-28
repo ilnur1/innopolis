@@ -21,11 +21,7 @@ public class Node<K,V> implements Map.Entry {
     }
 
     public int getHashCode() {
-        return hashCode;
-    }
-
-    public void setHashCode(int hashCode) {
-        this.hashCode = hashCode;
+        return hashCode();
     }
 
     @Override
@@ -63,10 +59,10 @@ public class Node<K,V> implements Map.Entry {
             return  true;
         if(obj instanceof Node)
         {
-            Node value = (Node)obj;
-            return  (Objects.equals(key, value.getKey()) &&
-                    Objects.equals(value, value.getValue()) ||
-                    Objects.equals(hashCode, value.getHashCode()));
+            Node node = (Node)obj;
+            return  (Objects.equals(key, node.getKey()) &&
+                    Objects.equals(value, node.getValue()) //||
+                    /*Objects.equals(hashCode, node.getHashCode())*/);
         }
         else
             return false;

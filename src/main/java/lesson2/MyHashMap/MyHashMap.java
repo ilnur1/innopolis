@@ -214,7 +214,6 @@ public class MyHashMap<K, V> implements Map {
 
     public void putAll(Map m) {
         Map<K,V> map = m;
-
         for (Entry<K, V> entry: map.entrySet()) {
             Node node = (Node) entry;
             put(node.getKey(),node.getValue());
@@ -244,16 +243,13 @@ public class MyHashMap<K, V> implements Map {
 
     public Set<Entry<K,V>> entrySet() {
         HashSet<Entry<K,V>> hash = new HashSet<>();
-        ArrayList<Entry<K,V>> arr = new ArrayList<>();
         for (Node<K,V> node : nodes){
             while (node != null)
             {
                 hash.add(node);
-                arr.add(node);
                 node = node.getNext();
             }
         }
-        //hash.addAll(arr);
         return hash;
     }
 
