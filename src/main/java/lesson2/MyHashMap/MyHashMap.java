@@ -2,10 +2,7 @@ package lesson2.MyHashMap;
 
 import lesson2.Node.Node;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MyHashMap<K, V> implements Map {
 
@@ -218,7 +215,8 @@ public class MyHashMap<K, V> implements Map {
     public void putAll(Map m) {
         Map<K,V> map = m;
 
-        for (Entry<K, V> node: map.entrySet()) {
+        for (Entry<K, V> entry: map.entrySet()) {
+            Node node = (Node) entry;
             put(node.getKey(),node.getValue());
         }
     }
@@ -234,14 +232,28 @@ public class MyHashMap<K, V> implements Map {
     }
 
     public Collection values() {
-        return null;
+        ArrayList<Node> array = new ArrayList<>();
+        for (Node node : nodes) {
+            while (node !=null) {
+                array.add(node);
+                node = node.getNext();
+            }
+        }
+        return array;
     }
 
     public Set<Entry<K,V>> entrySet() {
-        HashSet<Entry<K,V>> hash = new HashSet<Entry<K,V>>();
+        HashSet<Entry<K,V>> hash = new HashSet<>();
+        ArrayList<Entry<K,V>> arr = new ArrayList<>();
         for (Node<K,V> node : nodes){
-            hash.add((Entry<K, V>) node);
+            while (node != null)
+            {
+                hash.add(node);
+                arr.add(node);
+                node = node.getNext();
+            }
         }
+        //hash.addAll(arr);
         return hash;
     }
 

@@ -1,8 +1,9 @@
 package lesson2.Node;
 
+import java.util.Map;
 import java.util.Objects;
 
-public class Node<K,V> {
+public class Node<K,V> implements Map.Entry {
     int hashCode;
     final K key;
     V value;
@@ -27,14 +28,18 @@ public class Node<K,V> {
         this.hashCode = hashCode;
     }
 
+    @Override
     public V getValue() {
         return value;
     }
 
-    public void setValue(V value) {
-        this.value = value;
+    @Override
+    public V setValue(Object value) {
+        this.value = (V) value;
+        return (V) value;
     }
 
+    @Override
     public K getKey() {
         return key;
     }
