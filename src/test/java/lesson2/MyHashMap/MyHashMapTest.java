@@ -1,8 +1,13 @@
 package lesson2.MyHashMap;
 
+import lesson2.Node.Node;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.html.parser.Entity;
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MyHashMapTest {
 
@@ -13,10 +18,10 @@ class MyHashMapTest {
         }
     }
     @Test
-    void size() {
+    void length() {
         MyHashMap<String,String> myTest = new MyHashMap<String, String>(25);
         fillHashMap(myTest,100);
-        assertEquals(25,myTest.size());
+        assertEquals(25,myTest.length());
     }
 
     @Test
@@ -87,20 +92,64 @@ class MyHashMapTest {
 
     @Test
     void clear() {
+        MyHashMap<String,String> myTest = new MyHashMap<String, String>();
+        fillHashMap(myTest,100);
+        assertEquals(67,myTest.get(67));
+        assertEquals(78,myTest.get(78));
+        assertEquals(1,myTest.get(1));
+        myTest.clear();
+        assertEquals(null,myTest.get(67));
+        assertEquals(null,myTest.get(78));
+        assertEquals(null,myTest.get(1));
+
     }
 
     @Test
+    <K>
     void keySet() {
+        MyHashMap<String,String> myTest = new MyHashMap<String, String>();
+        fillHashMap(myTest,100);
+        Set<K> keys = myTest.keySet();
+        for (int i = 0; i < keys.size(); i++) {
+            assertEquals(true, keys.contains(i));
+        }
     }
 
     @Test
     void values() {
+        MyHashMap<String,String> myTest = new MyHashMap<String, String>();
+        fillHashMap(myTest,100);
+        ArrayList<Node> array = (ArrayList<Node>) myTest.values();
+        for (int i = 0; i < array.size(); i++) {
+            Node node = array.get(i);
+            assertEquals(true,myTest.containsKey(node.getKey()));
+            assertEquals(true,myTest.containsValue(node.getValue()));
+        }
     }
 
     @Test
     void entrySet() {
-        /*MyHashMap<String,String> myTest = new MyHashMap<String, String>();
+        MyHashMap<String,String> myTest = new MyHashMap<String, String>();
         fillHashMap(myTest,100);
-        myTest.entrySet();*/
+        Set<Map.Entry<String, String>> hash = myTest.entrySet();
+        for (Map.Entry<String,String> entry : hash)
+        {
+            assertEquals(true,myTest.containsKey(entry.getKey()));
+            assertEquals(true,myTest.containsKey(entry.getValue()));
+        }
+    }
+
+    @Test
+    void size() {
+        MyHashMap<String,String> myTest = new MyHashMap<String, String>();
+        fillHashMap(myTest,100);
+        assertEquals(100, myTest.size());
+        myTest.remove(16);
+        assertEquals(99, myTest.size());
+        myTest.remove(4);
+        myTest.remove(87);
+        myTest.remove("66");
+        myTest.remove(null);
+        assertEquals(97, myTest.size());
     }
 }

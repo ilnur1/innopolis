@@ -7,18 +7,32 @@ import java.util.*;
 public class MyHashMap<K, V> implements Map {
 
     Node<K, V>[] nodes;
-    int size = 16;
+    int length = 16;
 
     public MyHashMap() {
-        nodes = new Node[size];
+        nodes = new Node[length];
     }
 
-    public MyHashMap(int size) {
-        this.size = size;
-        nodes = new Node[size];
+    public MyHashMap(int length) {
+        this.length = length;
+        nodes = new Node[length];
     }
 
+    public int length() {
+        return length;
+    }
+
+    @Override
     public int size() {
+        int size=0;
+        for (Node node : nodes)
+        {
+            while (node != null)
+            {
+                size++;
+                node=node.getNext();
+            }
+        }
         return size;
     }
 
@@ -40,8 +54,7 @@ public class MyHashMap<K, V> implements Map {
      * @return
      */
     public boolean containsKey(Object key) {
-        int hashCode = getNewHash(key.hashCode());
-        int index = getIndex(hashCode);
+        int index = getIndex(key);
         if(nodes[index] == null)
             return false;
         Node result = findNodeKey(nodes[index], key);
@@ -76,9 +89,8 @@ public class MyHashMap<K, V> implements Map {
      * @param key
      * @return
      */
-    public V get(Object key) {
-        int hashCode = getNewHash(key.hashCode());
-        int index = getIndex(hashCode);
+    public V get(Object key)  {
+        int index = getIndex(key);
         if(nodes[index] == null)
             return null;
         Node result = findNodeKey(nodes[index], key);
@@ -154,10 +166,9 @@ public class MyHashMap<K, V> implements Map {
      * @return
      */
     private Object addNode(Object key, Object value) {
-        int hashCode = getNewHash(key.hashCode());
-        int index = getIndex(hashCode);
+        int index = getIndex(key);
         Node node = nodes[index];
-        Node newNode = new Node(key, value,hashCode);
+        Node newNode = new Node(key, value,getNewHash(key.hashCode()));
         if(node == null)
         {
             nodes[index] = newNode;
@@ -196,18 +207,18 @@ public class MyHashMap<K, V> implements Map {
      * @return
      */
     public V remove(Object key) {
-
-        for (int i = 1; i < nodes.length; i++) {
-            Node findNode = findNodeKey(nodes[i], key);
-            if (findNode != null) {
-                Node beforeNode = findNodeBefore(nodes[i], findNode);
-                if (beforeNode != null) {
-                    beforeNode.setNext(findNode.getNext());
-                    return (V) findNode.getValue();
-                } else
-                    nodes[i] = null;
+        int index = getIndex(key);
+        Node findNode = findNodeKey(nodes[index], key);
+        if (findNode != null) {
+            Node beforeNode = findNodeBefore(nodes[index], findNode);
+            if (beforeNode != null) {
+                beforeNode.setNext(findNode.getNext());
                 return (V) findNode.getValue();
-            }
+            } else if(findNode.getNext() != null) {
+                nodes[index] = findNode.getNext();
+            } else
+                nodes[index] = null;
+            return (V) findNode.getValue();
         }
         return null;
     }
@@ -221,13 +232,20 @@ public class MyHashMap<K, V> implements Map {
     }
 
     public void clear() {
-        for(Node node : nodes) {
-            node = null;
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i] = null;
         }
     }
 
     public Set keySet() {
-        return null;
+        Set<K> keys = new HashSet<>();
+        for (Node node : nodes) {
+            while (node !=null) {
+                keys.add((K) node.getKey());
+                node = node.getNext();
+            }
+        }
+        return keys;
     }
 
     public Collection values() {
@@ -258,20 +276,24 @@ public class MyHashMap<K, V> implements Map {
      * @param hashCode
      * @return
      */
-    public int getNewHash(int hashCode) {
+    private int getNewHash(int hashCode) {
         hashCode ^= (hashCode >>> 20) ^ (hashCode >>> 12);
         return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
     }
 
     /**
-     * Возвращает индекс по хэшу
-     * @param hashCode
+     * Возвращает индекс по ключу
+     * @param key
      * @return
      */
-    public int getIndex(int hashCode)
+    private int getIndex(Object key)
     {
-        return  hashCode & (size - 1);
+        int index = 0;
+        if(key != null) {
+            int hashCode = getNewHash(key.hashCode());
+            index = hashCode & (length - 1);
+        }
+        return index;
     }
-
 
 }
