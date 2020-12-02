@@ -3,11 +3,11 @@ package lesson2.Node;
 import java.util.Map;
 import java.util.Objects;
 
-public class Node<K,V> implements Map.Entry {
-    int hashCode;
+public class Node<K, V> implements Map.Entry<K,V> {
     final K key;
+    int hashCode;
     V value;
-    Node next;
+    Node<K, V> next;
 
     public Node(K key, V value) {
         this.key = key;
@@ -17,11 +17,7 @@ public class Node<K,V> implements Map.Entry {
     public Node(K key, V value, int hashCode) {
         this.key = key;
         this.value = value;
-        this.hashCode  = hashCode;
-    }
-
-    public int getHashCode() {
-        return hashCode();
+        this.hashCode = hashCode;
     }
 
     @Override
@@ -40,37 +36,28 @@ public class Node<K,V> implements Map.Entry {
         return key;
     }
 
-    public Node getNext() {
+    public Node<K, V> getNext() {
         return next;
     }
 
-    public void setNext(Node next) {
+    public void setNext(Node<K, V> next) {
         this.next = next;
     }
 
-    public int getIndex(int hashCode, int size){
-        return  hashCode & (size - 1);
-    }
-
     @Override
-    public boolean equals(Object obj)
-    {
-        if(this == obj)
-            return  true;
-        if(obj instanceof Node)
-        {
-            Node node = (Node)obj;
-            return  (Objects.equals(key, node.getKey()) &&
-                    Objects.equals(value, node.getValue()) //||
-                    /*Objects.equals(hashCode, node.getHashCode())*/);
-        }
-        else
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj instanceof Node) {
+            Node<K, V> node = (Node<K, V>) obj;
+            return (Objects.equals(key, node.getKey()) &&
+                    Objects.equals(value, node.getValue()));
+        } else
             return false;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         hashCode ^= key.hashCode() + (hashCode >>> 20) ^ (hashCode >>> 12);
         hashCode = hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
         return hashCode;

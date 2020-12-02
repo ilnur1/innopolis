@@ -4,7 +4,7 @@ import lesson2.Node.Node;
 
 import java.util.*;
 
-public class MyHashMap<K, V> implements Map {
+public class MyHashMap<K, V> implements Map<K, V> {
 
     Node<K, V>[] nodes;
     int length = 16;
@@ -18,19 +18,27 @@ public class MyHashMap<K, V> implements Map {
         nodes = new Node[length];
     }
 
+    /**
+     * Возвращает длину массива
+     *
+     * @return длина массива
+     */
     public int length() {
         return length;
     }
 
+    /**
+     * Возвращает количество элементов
+     *
+     * @return количество элементов
+     */
     @Override
     public int size() {
-        int size=0;
-        for (Node node : nodes)
-        {
-            while (node != null)
-            {
+        int size = 0;
+        for (Node<K, V> node : nodes) {
+            while (node != null) {
                 size++;
-                node=node.getNext();
+                node = node.getNext();
             }
         }
         return size;
@@ -38,11 +46,12 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * определяет пустой ли hashmap
-     * @return
+     *
+     * @return флаг пустой ли хэшмап
      */
     public boolean isEmpty() {
-        for(Node node : nodes){
-            if(node != null)
+        for (Node<K, V> node : nodes) {
+            if (node != null)
                 return false;
         }
         return true;
@@ -50,32 +59,31 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Определяет содержится ли в hashmap искомый ключ
+     *
      * @param key искомый ключ
-     * @return
+     * @return флаг содержится ли ключ
      */
     public boolean containsKey(Object key) {
         int index = getIndex(key);
-        if(nodes[index] == null)
+        if (nodes[index] == null)
             return false;
-        Node result = findNodeKey(nodes[index], key);
-        if (result != null)
-            return true;
-        else
-            return false;
+        Node<K, V> result = findNodeKey(nodes[index], key);
+        return result != null;
     }
 
     /**
      * Определяет содержится ли в hashmap искомое значение
+     *
      * @param value искомое значение
-     * @return
+     * @return флаг содержится ли значение
      */
     public boolean containsValue(Object value) {
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i].getValue().equals(value))
+        for (Node<K, V> node : nodes) {
+            if (node.getValue().equals(value))
                 return true;
-            else if(nodes[i].getNext() != null){
-                Node findNode = findNodeValue(nodes[i],value);
-                if(findNode == null)
+            else if (node.getNext() != null) {
+                Node<K, V> findNode = findNodeValue(node, value);
+                if (findNode == null)
                     continue;
                 else
                     return true;
@@ -86,28 +94,30 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Возвращает значение по ключу
-     * @param key
-     * @return
+     *
+     * @param key ключ
+     * @return значение
      */
-    public V get(Object key)  {
+    public V get(Object key) {
         int index = getIndex(key);
-        if(nodes[index] == null)
+        if (nodes[index] == null)
             return null;
-        Node result = findNodeKey(nodes[index], key);
+        Node<K, V> result = findNodeKey(nodes[index], key);
         if (result != null)
-            return (V) result.getValue();
+            return result.getValue();
         else
             return null;
     }
 
     /**
      * Находит элемент в связном списке по ключу
-     * @param node
-     * @param key
+     *
+     * @param node начальный элемент связного списка
+     * @param key  ключ элемента, которого нужно найти
      * @return искомый элемент
      */
-    private Node findNodeKey(Node node, Object key) {
-        if (node.getKey().equals(key))
+    private Node<K, V> findNodeKey(Node<K, V> node, Object key) {
+        if (key == null && node.getKey() == null || node.getKey().equals(key))
             return node;
         else if (node.getNext() != null)
             return findNodeKey(node.getNext(), key);
@@ -117,12 +127,13 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Находит элемент в связном списке по значению
-     * @param node
-     * @param value
+     *
+     * @param node  начальный элемент связного списка
+     * @param value значение по которму нужно найти элемент
      * @return искомый элемент
      */
-    private Node findNodeValue(Node node, Object value) {
-        if (node.getValue().equals(value))
+    private Node<K, V> findNodeValue(Node<K, V> node, Object value) {
+        if (value == null && node.getValue() == null || node.getValue().equals(value))
             return node;
         else if (node.getNext() != null)
             return findNodeValue(node.getNext(), value);
@@ -132,11 +143,12 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Находит предшедствующий элемент
-     * @param node начальный элемент связного списка
+     *
+     * @param node     начальный элемент связного списка
      * @param findNode искомый элемент
      * @return предшедствующий элемент искомого элемента
      */
-    private Node findNodeBefore(Node node, Node findNode) {
+    private Node<K, V> findNodeBefore(Node<K, V> node, Node<K, V> findNode) {
         if (node != null && node.getNext() != null) {
             if (node.getNext().equals(findNode)) {
                 return node;
@@ -148,11 +160,12 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Добавление hashmap
-     * @param key
-     * @param value
-     * @return
+     *
+     * @param key   ключ
+     * @param value значение
+     * @return значение
      */
-    public Object put(Object key, Object value) {
+    public V put(K key, V value) {
         if (key != null)
             return addNode(key, value);
         else
@@ -161,73 +174,74 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Добавление элемента с не нулевым ключом
-     * @param key
-     * @param value
-     * @return
+     *
+     * @param key   ключ
+     * @param value значение
+     * @return значение
      */
-    private Object addNode(Object key, Object value) {
+    private V addNode(K key, V value) {
         int index = getIndex(key);
-        Node node = nodes[index];
-        Node newNode = new Node(key, value,getNewHash(key.hashCode()));
-        if(node == null)
-        {
+        Node<K, V> node = nodes[index];
+        Node<K, V> newNode = new Node<>(key, value, getNewHash(key.hashCode()));
+        if (node == null) {
             nodes[index] = newNode;
-            return newNode;
-        }else if (node.getKey().equals(key)) {
+            return newNode.getValue();
+        } else if (node.getKey() != null && node.getKey().equals(key)) {
             node.setValue(value);
-            return node;
+            return node.getValue();
         } else {
             newNode.setNext(node);
             nodes[index] = newNode;
-            return newNode;
+            return newNode.getValue();
         }
     }
 
     /**
      * Добавление элемента с нулевым ключом
-     * @param value
-     * @return
+     *
+     * @param value значение
+     * @return значение
      */
-    private Object addNodeForNull(Object value) {
-        Node newNode = new Node(null, value);
-        Node node = nodes[0];
+    private V addNodeForNull(V value) {
+        Node<K, V> newNode = new Node<>(null, value);
+        Node<K, V> node = nodes[0];
         if (node != null) {
             newNode.setNext(node);
             nodes[0] = newNode;
-            return node;
+            return node.getValue();
         } else {
             nodes[0] = newNode;
-            return newNode;
+            return newNode.getValue();
         }
     }
 
     /**
      * Удаление из hashmap по ключу
-     * @param key
-     * @return
+     *
+     * @param key ключ
+     * @return значение
      */
     public V remove(Object key) {
         int index = getIndex(key);
-        Node findNode = findNodeKey(nodes[index], key);
+        Node<K, V> findNode = findNodeKey(nodes[index], key);
         if (findNode != null) {
-            Node beforeNode = findNodeBefore(nodes[index], findNode);
+            Node<K, V> beforeNode = findNodeBefore(nodes[index], findNode);
             if (beforeNode != null) {
                 beforeNode.setNext(findNode.getNext());
-                return (V) findNode.getValue();
-            } else if(findNode.getNext() != null) {
+                return findNode.getValue();
+            } else if (findNode.getNext() != null) {
                 nodes[index] = findNode.getNext();
             } else
                 nodes[index] = null;
-            return (V) findNode.getValue();
+            return findNode.getValue();
         }
         return null;
     }
 
     public void putAll(Map m) {
-        Map<K,V> map = m;
-        for (Entry<K, V> entry: map.entrySet()) {
-            Node node = (Node) entry;
-            put(node.getKey(),node.getValue());
+        for (Entry<K, V> entry : ((Map<K, V>) m).entrySet()) {
+            Node<K, V> node = (Node<K, V>) entry;
+            put(node.getKey(), node.getValue());
         }
     }
 
@@ -237,33 +251,32 @@ public class MyHashMap<K, V> implements Map {
         }
     }
 
-    public Set keySet() {
+    public Set<K> keySet() {
         Set<K> keys = new HashSet<>();
-        for (Node node : nodes) {
-            while (node !=null) {
-                keys.add((K) node.getKey());
+        for (Node<K, V> node : nodes) {
+            while (node != null) {
+                keys.add(node.getKey());
                 node = node.getNext();
             }
         }
         return keys;
     }
 
-    public Collection values() {
-        ArrayList<Node> array = new ArrayList<>();
-        for (Node node : nodes) {
-            while (node !=null) {
-                array.add(node);
+    public Collection<V> values() {
+        ArrayList<V> array = new ArrayList<>();
+        for (Node<K, V> node : nodes) {
+            while (node != null) {
+                array.add(node.getValue());
                 node = node.getNext();
             }
         }
         return array;
     }
 
-    public Set<Entry<K,V>> entrySet() {
-        HashSet<Entry<K,V>> hash = new HashSet<>();
-        for (Node<K,V> node : nodes){
-            while (node != null)
-            {
+    public Set<Entry<K, V>> entrySet() {
+        HashSet<Entry<K, V>> hash = new HashSet<>();
+        for (Node<K, V> node : nodes) {
+            while (node != null) {
                 hash.add(node);
                 node = node.getNext();
             }
@@ -273,8 +286,9 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Возвращает новый hash
-     * @param hashCode
-     * @return
+     *
+     * @param hashCode хэшкод
+     * @return новый хэшкод
      */
     private int getNewHash(int hashCode) {
         hashCode ^= (hashCode >>> 20) ^ (hashCode >>> 12);
@@ -283,13 +297,13 @@ public class MyHashMap<K, V> implements Map {
 
     /**
      * Возвращает индекс по ключу
-     * @param key
-     * @return
+     *
+     * @param key ключ
+     * @return индекс
      */
-    private int getIndex(Object key)
-    {
+    private int getIndex(Object key) {
         int index = 0;
-        if(key != null) {
+        if (key != null) {
             int hashCode = getNewHash(key.hashCode());
             index = hashCode & (length - 1);
         }
