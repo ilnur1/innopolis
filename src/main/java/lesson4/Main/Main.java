@@ -4,16 +4,19 @@ import lesson4.BubbleSort.BubbleSort;
 import lesson4.FastSort.FastSort;
 import lesson4.Person.Person;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         int begin = 0, end = 10000;
 
-        Person[] persons = new Person[end];
+        ArrayList<Person> persons= new ArrayList<>();
         persons = generateArray(end);
-        Person[] personsFast = persons.clone();
-        Person[] personsBubble = persons.clone();
+        ArrayList<Person> personsFast = new ArrayList<>();
+        ArrayList<Person> personsBubble = new ArrayList<>();
+        persons.stream().forEach(x-> {personsFast.add(x); personsBubble.add(x);});
 
         FastSort sort = new FastSort();
         long start = System.currentTimeMillis();
@@ -23,8 +26,9 @@ public class Main {
         BubbleSort sort2 = new BubbleSort();
         start = System.currentTimeMillis();
         sort2.sort(personsBubble, begin, end);
+        ArrayList<Person> resultBubbleSort = sort2.getResultSortList();
         System.out.println("Пузырьковая сортировка - " + (System.currentTimeMillis() - start) + " ms");
-        printElements(persons, personsFast, personsBubble);
+        printElements(persons, personsFast, resultBubbleSort);
 
         for (String error : sort.getErrorLog()) {
             System.out.println(error);
@@ -34,29 +38,29 @@ public class Main {
         }
     }
 
-    private static void printElements(Person[] persons, Person[] personsFast, Person[] personsBubble) {
-        for (int i = 0; i < persons.length; i++) {
-            System.out.print("[sex:" + persons[i].getSex().toString() + ";");
-            System.out.print(" age:" + persons[i].getAge() + ";");
-            System.out.print(" name:" + persons[i].getName() + "] | ");
-            System.out.print("[sex:" + personsFast[i].getSex().toString() + ";");
-            System.out.print(" age:" + personsFast[i].getAge() + ";");
-            System.out.print(" name:" + personsFast[i].getName() + "] | ");
-            System.out.print("[sex:" + personsBubble[i].getSex().toString() + ";");
-            System.out.print(" age:" + personsBubble[i].getAge() + ";");
-            System.out.print(" name:" + personsBubble[i].getName() + "] ");
+    private static void printElements(ArrayList<Person> persons, ArrayList<Person> personsFast, ArrayList<Person> personsBubble) {
+        for (int i = 0; i < persons.size(); i++) {
+            System.out.print("[sex:" + persons.get(i).getSex().toString() + ";");
+            System.out.print(" age:" + persons.get(i).getAge() + ";");
+            System.out.print(" name:" + persons.get(i).getName() + "] | ");
+            System.out.print("[sex:" + personsFast.get(i).getSex().toString() + ";");
+            System.out.print(" age:" + personsFast.get(i).getAge() + ";");
+            System.out.print(" name:" + personsFast.get(i).getName() + "] | ");
+            System.out.print("[sex:" + personsBubble.get(i).getSex().toString() + ";");
+            System.out.print(" age:" + personsBubble.get(i).getAge() + ";");
+            System.out.print(" name:" + personsBubble.get(i).getName() + "] ");
             System.out.println();
         }
 
     }
 
-    public static Person[] generateArray(int size) throws Exception {
-        Person[] persons = new Person[size];
+    public static ArrayList<Person> generateArray(int size) throws Exception {
+        ArrayList<Person> persons = new ArrayList<>();
         Random randomAge = new Random();
-        for (int i = 0; i < persons.length; i++) {
-            persons[i] = new Person(randomAge.nextInt(101),
+        for (int i = 0; i < size; i++) {
+            persons.add(new Person(randomAge.nextInt(101),
                     getRandomName(),
-                    getRandomSex());
+                    getRandomSex()));
         }
         return persons;
     }

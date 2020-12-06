@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class FastSort implements ISort {
-
     ArrayList<String> ErrorLog;
 
     public FastSort() {
@@ -24,45 +23,49 @@ public class FastSort implements ISort {
         return ErrorLog;
     }
 
-
     /**
      * Быстрая сортировка
      *
-     * @param persons    входной массив
+     * @param persons    входной лист
      * @param startIndex начало диапазона сортировки
      * @param endIndex   конец диапазона сортировки
      */
     @Override
-    public void sort(Person[] persons, int startIndex, int endIndex) throws NameAndAgeMatch {
+    public void sort(ArrayList<Person> persons, int startIndex, int endIndex) throws NameAndAgeMatch {
         if (startIndex == endIndex)
             return;
         Stack<Person> before = new Stack<>();
         Stack<Person> after = new Stack<>();
-
-        int separatorIndex = startIndex;
-        Person separator = persons[separatorIndex];
-        for (int i = startIndex; i < endIndex; i++) {
-            if (separatorIndex == i) continue;
-            try {
-                if (persons[i].compareTo(separator) >= 0)
-                    after.push(persons[i]);
-                else
-                    before.push(persons[i]);
-            } catch (NameAndAgeMatch e) {
-                ErrorLog.add(e.getMessage() + ": " + persons[i].getName() + "; " + persons[i].getAge() + "; " + persons[i].getSex());
+        int separatorIndex = 0;
+        Person separator = persons.get(startIndex);
+        Person finalSeparator = separator;
+        persons.subList(startIndex, endIndex).stream().forEach(x -> {
+            if (!x.equals(finalSeparator)) {
+                try {
+                    if (x.compareTo(finalSeparator) >= 0)
+                        after.push(x);
+                    else
+                        before.push(x);
+                } catch (NameAndAgeMatch e) {
+                    ErrorLog.add(e.getMessage() + ": " + x.getName() + "; " + x.getAge() + "; " + x.getSex());
+                }
             }
-        }
+        });
+        boolean isNotInputSeparator = true;
         for (int i = startIndex; i < endIndex; i++) {
             if (!before.empty())
-                persons[i] = before.pop();
-            else if (separator != null) {
-                persons[i] = separator;
+                persons.set(i, before.pop());
+            else if (isNotInputSeparator) {
+                persons.set(i, finalSeparator);
                 separatorIndex = i;
-                separator = null;
+                isNotInputSeparator = false;
             } else if (!after.empty())
-                persons[i] = after.pop();
+                persons.set(i, after.pop());
         }
+
         sort(persons, startIndex, separatorIndex);
         sort(persons, separatorIndex + 1, endIndex);
     }
+
+
 }

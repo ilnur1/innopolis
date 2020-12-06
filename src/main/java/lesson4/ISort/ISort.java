@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public interface ISort {
     /**
      * Метод для сортировки
-     * @param array входной массив
+     * @param persons входной лист
      * @param startIndex начало диапазона сортировки
      * @param endIndex конец диапазона сортировки
      */
-    void sort(Person[] array, int startIndex, int endIndex);
+    void sort(ArrayList<Person> persons, int startIndex, int endIndex);
 }

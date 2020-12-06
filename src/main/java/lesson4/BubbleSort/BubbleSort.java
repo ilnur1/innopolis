@@ -1,17 +1,21 @@
 package lesson4.BubbleSort;
 
+import javafx.scene.Parent;
 import lesson4.ISort.ISort;
 import lesson4.NameAndAgeMatch.NameAndAgeMatch;
 import lesson4.Person.Person;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BubbleSort implements ISort {
 
+    ArrayList<Person> resultSortList;
     ArrayList<String> ErrorLog;
 
     public BubbleSort() {
         ErrorLog = new ArrayList<>();
+        resultSortList = new ArrayList<>();
     }
 
     /**
@@ -24,14 +28,23 @@ public class BubbleSort implements ISort {
     }
 
     /**
+     * Возвращает результат сортировки
+     * @return список людей
+     */
+    public ArrayList<Person> getResultSortList() {
+        return resultSortList;
+    }
+    /**
      * Сортировка пузырьком
      *
-     * @param persons    входной массив
+     * @param array    входной лист
      * @param startIndex начало диапазона сортировки
      * @param endIndex   конец диапазона сортировки
      */
     @Override
-    public void sort(Person[] persons, int startIndex, int endIndex) throws NameAndAgeMatch {
+    public void sort(ArrayList<Person> array, int startIndex, int endIndex) throws NameAndAgeMatch {
+        Person[] persons = new Person[array.size()];
+        array.toArray(persons);
         boolean sorted = false;
         while (!sorted) {
             sorted = true;
@@ -48,5 +61,8 @@ public class BubbleSort implements ISort {
                 }
             }
         }
+        Arrays.stream(Arrays.stream(persons).toArray()).forEach(x->{
+            resultSortList.add((Person) x);
+        });
     }
 }
