@@ -5,6 +5,12 @@ import java.util.*;
 
 public class MyClass {
 
+    /**
+     * Обнуляет поля объекта. в случе если объект реализует Map то очищает ключи и выводит значения на экран
+     * @param object объект, в которм будут искаться поля или ключи
+     * @param fieldsToCleanup список для очиски ключей или обнуления значений полей
+     * @param fieldsToOutput спсиок для вывода на экран ключей или полей
+     */
     public static void cleanup(Object object, Set<String> fieldsToCleanup, Set<String> fieldsToOutput) {
         Class<?> clazz = object.getClass();
 
@@ -33,7 +39,7 @@ public class MyClass {
     /**
      * Проверка содержания полей. в случае не нахождения выкидывает ошибку
      * @param fieldsToCleanup список для очиски ключей или обнуления значений полей
-     * @param fieldsToOutput спсиок для вывода на экран ключей и полей
+     * @param fieldsToOutput спсиок для вывода на экран ключей или полей
      * @param clazz объект, в которм должны хранятся ключи или поля
      */
     private static void chekSetFieldsNames(Set<String> fieldsToCleanup, Set<String> fieldsToOutput, Class<?> clazz) {
