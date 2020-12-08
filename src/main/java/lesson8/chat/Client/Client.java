@@ -8,6 +8,7 @@ public class Client {
     private static BufferedReader reader;
     private static BufferedReader in;
     private static BufferedWriter out;
+
     public static void main(String[] args) {
         try {
             try {
@@ -17,12 +18,16 @@ public class Client {
                 out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                 System.out.println("Введите свое имя:");
                 String name = reader.readLine();
-                out.write(name+"\n");
+                out.write(name + "\n");
                 out.flush();
                 System.out.println("Теперь вы можете вводить сообщения");
                 while (true) {
+                    while (!reader.ready()) {
+                        if (in.ready())
+                            System.out.println(in.readLine());
+                    }
                     String word = reader.readLine();
-                    if(word.equals("exit")) break;
+                    if (word.equals("quit")) break;
                     out.write(word + "\n");
                     out.flush();
                     String serverWord = in.readLine();

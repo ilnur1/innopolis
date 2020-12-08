@@ -6,7 +6,7 @@ import lesson8.chat.User.User;
 import java.io.*;
 import java.net.Socket;
 
-public class ServerThread extends  Thread {
+public class ServerThread extends Thread {
     private User user;
     private Socket socket;
     private BufferedReader in;
@@ -23,11 +23,14 @@ public class ServerThread extends  Thread {
         try {
             out.write(msg + "\n");
             out.flush();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
-    private void sendMessange(String messange){
-        for(ServerThread st : Server.getServerList()){
+    private void sendMessange(String messange) {
+        if (messange == null)
+            return;
+        for (ServerThread st : Server.getServerList()) {
             st.send(user.getName() + ": " + messange);
         }
     }
@@ -40,11 +43,7 @@ public class ServerThread extends  Thread {
             user = new User(word);
             while (true) {
                 word = in.readLine();
-                if(word != null && word.equals("stop")) {
-                    break;                }
-                for (ServerThread vr : Server.getServerList()) {
-                    vr.sendMessange(word);
-                }
+                sendMessange(word);
             }
 
         } catch (IOException e) {
