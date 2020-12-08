@@ -19,6 +19,10 @@ public class ServerThread extends Thread {
         start();
     }
 
+    /**
+     * отправка сообщения
+     * @param msg сообщение
+     */
     private void send(String msg) {
         try {
             out.write(msg + "\n");
@@ -27,6 +31,10 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Отправка сообщений всем подключенным клиентам
+     * @param messange сообщение
+     */
     private void sendMessange(String messange) {
         if (messange == null)
             return;

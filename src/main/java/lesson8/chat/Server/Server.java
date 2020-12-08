@@ -11,10 +11,10 @@ public class Server {
     private static final int PORT = 8080;
     private static LinkedList<ServerThread> serverList = new LinkedList<>();
 
-    public static int getPORT() {
-        return PORT;
-    }
-
+    /**
+     * Возвращает список связей с клиентом
+     * @return список объектов-нитей с клиентом
+     */
     public static LinkedList<ServerThread> getServerList() {
         return serverList;
     }
