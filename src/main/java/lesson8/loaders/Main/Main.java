@@ -1,6 +1,7 @@
 package lesson8.loaders.Main;
 
 import lesson8.loaders.MyLoader.MyLoader;
+import lesson8.loaders.Worker.Worker;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -28,9 +29,9 @@ public class Main {
         compiler.run(null, null, null, classPath + ".java");
         MyLoader loader = new MyLoader();
         Class<?> clazz = loader.loadClass(MyLoader.pathSomeClass);
-        Object obj = clazz.getDeclaredConstructor().newInstance();
+        Worker worker = (Worker) clazz.getDeclaredConstructor().newInstance();
         Method method = clazz.getMethod("doWork");
-        method.invoke(obj);
+        method.invoke(worker);
     }
 
     private static String getClassBody() throws IOException {
