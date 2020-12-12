@@ -34,10 +34,7 @@ public class MyClass {
             } else {
                 Class<?> clazz = object.getClass();
                 for (Map.Entry<String, Boolean> entry : hashMap.entrySet()) {
-                    Optional<Field> fieldOptional = Optional.of(clazz.getDeclaredField(entry.getKey().split(" ")[0]));
-                    Field field = fieldOptional.orElse(null);
-                    if (field == null)
-                        throw new IllegalArgumentException("Не найдено поле");
+                    Field field = clazz.getDeclaredField(entry.getKey().split(" ")[0]);
                     field.setAccessible(true);
                     if (entry.getValue())
                         setToNullAllField(object, field);
