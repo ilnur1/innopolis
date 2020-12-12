@@ -16,7 +16,7 @@ public class Main {
     /**
      * В случе необходимости нужно исправить путь к файлу
      */
-    public static String classPath = "C:\\Users\\user\\IdeaProjects\\Innopolis\\src\\main\\java\\lesson8\\loaders\\SomeClass\\SomeClass";
+    public static String classPath = "src\\main\\java\\lesson8\\loaders\\SomeClass\\SomeClass";
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, InterruptedException {
 
@@ -30,8 +30,7 @@ public class Main {
         MyLoader loader = new MyLoader();
         Class<?> clazz = loader.loadClass(MyLoader.pathSomeClass);
         Worker worker = (Worker) clazz.getDeclaredConstructor().newInstance();
-        Method method = clazz.getMethod("doWork");
-        method.invoke(worker);
+        worker.doWork();
     }
 
     private static String getClassBody() throws IOException {
