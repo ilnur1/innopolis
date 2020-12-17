@@ -1,9 +1,10 @@
 package lesson10.lifeGame.Point;
 
-import lesson10.lifeGame.SetNextGenException.SetNextGenException;
-
 import java.util.List;
 
+/**
+ * класс описывает точку на поле
+ */
 public class Point {
     private boolean isAlive;
 
@@ -23,15 +24,20 @@ public class Point {
         isAlive = alive;
     }
 
-    public boolean isAliveNextGen(List<Point> listPoint){
+    /**
+     * Возвращает значение жизни для следующего поколения
+     *
+     * @param listPoint список соседних точек
+     * @return значение жизни
+     */
+    public boolean isAliveNextGen(List<Point> listPoint) {
         int countAlive = (int) listPoint.stream().filter(x -> x.getIsAlive()).count();
-        if(isAlive) {
+        if (isAlive) {
             if (countAlive == 2 || countAlive == 3)
                 return true;
             else
                 return false;
-        }
-        else {
+        } else {
             if (countAlive == 3)
                 return true;
             else

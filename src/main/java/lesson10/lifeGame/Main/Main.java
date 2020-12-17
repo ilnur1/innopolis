@@ -1,20 +1,32 @@
 package lesson10.lifeGame.Main;
 
-import lesson10.lifeGame.Field.Field;
+import lesson10.lifeGame.FileLife.FileLife;
+import lesson10.lifeGame.Life.Life;
 import lesson10.lifeGame.Point.Point;
+import org.apache.commons.lang3.time.StopWatch;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) {
-        Field field = new Field(10);
-        Point[][] arr = new Point[10][10];
-        arr[0][2] = new Point(true);
-        arr[1][2] = new Point(true);
-        arr[2][2] = new Point(true);
-        arr[2][1] = new Point(true);
-        arr[1][0] = new Point(true);
-        /*arr[3][3] = new Point(true);
-        arr[3][4] = new Point(true);
-        arr[3][5] = new Point(true);*/
-        field.startLife(arr,35);
+    public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
+        Point[][] arr = FileLife.ReadFile("src\\main\\java\\lesson10\\lifeGame\\begin.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Введите количество генераций: ");
+        int countGeneration = Integer.parseInt(reader.readLine());
+        System.out.print("Введите количество потоков: ");
+        int countThreads = Integer.parseInt(reader.readLine());
+        System.out.print("Введите имя файла для сохранения результата: ");
+        String name = reader.readLine();
+
+        Life l = new Life(countThreads);
+        StopWatch time = new StopWatch();
+        time.start();
+        Point[][] result = l.startLife(arr, countGeneration);
+        time.stop();
+        System.out.println(time.getTime() + " ms");
+        FileLife.WriteFile("src\\main\\java\\lesson10\\lifeGame\\" + name + ".txt", result);
     }
 }

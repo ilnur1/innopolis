@@ -5,42 +5,63 @@ import lesson10.lifeGame.Point.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * класс описывает поле, где живут точки (Point)
+ */
 public class Field {
+    public static Point[][] fieldNextGen;
     private Point[][] field;
-    private Point[][] fieldNextGen;
+    private Point[][] alivePoints;
 
-    public Field(int size) {
+    public Field(Point[][] alivePoints, int size) {
         field = new Point[size][size];
         fieldNextGen = new Point[size][size];
+        this.alivePoints = alivePoints;
     }
 
-    public void startLife(Point[][] alivePoints, int countGeneration) {
-        for (int i = 0; i < alivePoints.length; i++) {
+    /**
+     * Заполняет поле для следующих поколений точек
+     *
+     * @param start_i   начальный индекс строки
+     * @param increment инкремент
+     */
+    public void fillFieldNextGen(int start_i, int increment) {
+        for (int i = start_i; i < field.length; i += increment) {
+            for (int j = 0; j < field[i].length; j++) {
+                List<Point> nearbyPoints = getNearbyPoints(field, i, j);
+                fieldNextGen[i][j].setIsAlive(field[i][j].isAliveNextGen(nearbyPoints));
+            }
+        }
+    }
+
+    /**
+     * Заполняет начальное поле и инициализирует поле следующего поколения
+     *
+     * @param start_i   начальный индекс строки
+     * @param increment инкремент
+     */
+    public void fillFirstFields(int start_i, int increment) {
+        for (int i = start_i; i < alivePoints.length; i += increment) {
             for (int j = 0; j < alivePoints[i].length; j++) {
                 if (alivePoints[i][j] != null) {
                     field[i][j] = new Point(alivePoints[i][j].getIsAlive());
-                    fieldNextGen[i][j] = new Point(alivePoints[i][j].getIsAlive());
-                }
-                else {
+                    fieldNextGen[i][j] = new Point();
+                } else {
                     field[i][j] = new Point();
                     fieldNextGen[i][j] = new Point();
                 }
             }
-
-        }
-        showField(field);
-        for (int g = 0; g < countGeneration; g++) {
-            for (int i = 0; i < field.length; i++) {
-                for (int j = 0; j < field[i].length; j++) {
-                    List<Point> nearbyPoints = getNearbyPoints(field,i, j);
-                    fieldNextGen[i][j].setIsAlive(field[i][j].isAliveNextGen(nearbyPoints));
-                }
-            }
-            showField(fieldNextGen);
-            field = fillField(fieldNextGen,field);
         }
     }
 
+    /**
+     * Возвращает список соседей точки(i,j)
+     *
+     * @param field поле где находится точка(i,j)
+     * @param i     индекс строки
+     * @param j     индекс столбца
+     * @return список соседей
+     */
     private List<Point> getNearbyPoints(Point[][] field, int i, int j) {
         List<Point> points = new ArrayList<>();
         String errMes = "";
@@ -65,21 +86,20 @@ public class Field {
                 points.add(field[i][j - 1]);
                 points.add(field[i + 1][j - 1]);
                 points.add(field[i + 1][j]);
-            }
-            else if (i != 0 && i < field.length - 1 && j == 0) {
+            } else if (i != 0 && i < field.length - 1 && j == 0) {
                 errMes = "левый край";
-                points.add(field[i-1][j]);
-                points.add(field[i -1][j + 1]);
-                points.add(field[i][j+1]);
+                points.add(field[i - 1][j]);
+                points.add(field[i - 1][j + 1]);
+                points.add(field[i][j + 1]);
                 points.add(field[i + 1][j + 1]);
-                points.add(field[i+1][j]);
+                points.add(field[i + 1][j]);
             } else if (i == 0 && j != 0 && j < field[i].length - 1) {
                 errMes = "верхний край";
-                points.add(field[i][j-1]);
+                points.add(field[i][j - 1]);
                 points.add(field[i + 1][j - 1]);
                 points.add(field[i + 1][j]);
                 points.add(field[i + 1][j + 1]);
-                points.add(field[i][j+1]);
+                points.add(field[i][j + 1]);
             } else if (i != 0 && i < field.length - 1 && j == field[i].length - 1) {
                 errMes = "правый край";
                 points.add(field[i - 1][j - 1]);
@@ -111,23 +131,15 @@ public class Field {
         return points;
     }
 
-    private Point[][] fillField(Point[][] from, Point[][] to){
-        for (int i = 0; i < from.length; i++) {
-            for (int j = 0; j < from[i].length; j++) {
-                if(from[i][j].getIsAlive())
-                    to[i][j] = new Point(true);
-                else
-                    to[i][j] = new Point();
-            }
-
-        }
-        return to;
-    }
-
+    /**
+     * Выводит состояние поле на экран
+     *
+     * @param field поле
+     */
     public void showField(Point[][] field) {
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[i].length; j++) {
-                System.out.print(field[i][j].getIsAlive() ? "\u220e " : "\u2219 ");// \u058e
+                System.out.print(field[i][j].getIsAlive() ? "\u220e " : "\u2219 ");
             }
             System.out.println();
         }
