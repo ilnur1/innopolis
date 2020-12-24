@@ -1,0 +1,8 @@
+version: '3'
+services:
+  http:
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - ./lesson18/src/main/resources:/dir

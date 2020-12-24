@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: lesson18.HttpServer
+Class-Path: commons-io-2.6.jar commons-lang3-3.11.jar
+

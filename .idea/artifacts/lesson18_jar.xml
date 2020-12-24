@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="lesson18:jar">
+    <output-path>$PROJECT_DIR$/lesson18/out</output-path>
+    <root id="root">
+      <element id="archive" name="lesson18.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/Innopolis_jar/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="lesson18" />
+      </element>
+      <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.11" />
+    </root>
+  </artifact>
+</component>
